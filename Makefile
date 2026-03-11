@@ -17,7 +17,8 @@ restart:
 
 health:
 	@echo "Checking SearXNG health..."
-	@STATUS=$$(curl -s -o /tmp/searxng_health.json -w "%{http_code}" \
+	@rm -f /tmp/searxng_health.json; \
+	STATUS=$$(curl -s -o /tmp/searxng_health.json -w "%{http_code}" \
 		"http://localhost:8080/search?q=test&format=json"); \
 	if [ "$$STATUS" != "200" ]; then \
 		echo "FAIL: HTTP $$STATUS (expected 200)"; \
