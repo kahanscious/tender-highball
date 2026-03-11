@@ -1,0 +1,38 @@
+use_default_settings: true
+
+server:
+  secret_key: "${SEARXNG_SECRET_KEY}"
+  base_url: "${SEARXNG_BASE_URL}"
+  bind_address: "0.0.0.0:8080"
+  public_instance: false
+  # CF-Connecting-IP is the header Cloudflare Tunnel sets with the real client IP.
+  # real_ip_ips restricts trust to the Docker Compose bridge range (172.16.0.0/12)
+  # so only the cloudflared container can set this header.
+  real_ip_header: "CF-Connecting-IP"
+  real_ip_ips:
+    - "172.16.0.0/12"
+
+search:
+  safe_search: 0
+  default_lang: "en"
+  formats:
+    - html
+    - json
+
+outgoing:
+  request_timeout: 3.0
+  max_request_timeout: 5.0
+
+redis:
+  url: redis://redis:6379/0
+
+engines:
+  - name: google
+    engine: google
+    shortcut: g
+  - name: bing
+    engine: bing
+    shortcut: b
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: d
