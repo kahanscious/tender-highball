@@ -9,7 +9,6 @@
 .worktrees/
 
 # Internal docs & plans
-CLAUDE.md
 AGENTS.md
 CABOOSE.md
 SPEC.md
