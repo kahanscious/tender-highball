@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+searxng/settings.yml
 
 # Project config (local)
 .caboose/

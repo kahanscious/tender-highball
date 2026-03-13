@@ -15,6 +15,10 @@ docker compose version  >/dev/null 2>&1 || MISSING+=("docker compose (plugin)")
 command -v make         >/dev/null 2>&1 || MISSING+=("make")
 command -v openssl      >/dev/null 2>&1 || MISSING+=("openssl")
 command -v envsubst     >/dev/null 2>&1 || MISSING+=("envsubst (gettext)")
+command -v curl         >/dev/null 2>&1 || MISSING+=("curl")
+command -v grep         >/dev/null 2>&1 || MISSING+=("grep")
+command -v sed          >/dev/null 2>&1 || MISSING+=("sed")
+command -v seq          >/dev/null 2>&1 || MISSING+=("seq")
 
 if [ ${#MISSING[@]} -gt 0 ]; then
   error "Missing required tools: ${MISSING[*]}"
