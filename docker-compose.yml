@@ -16,6 +16,12 @@ services:
       - SEARXNG_BASE_URL=${SEARXNG_BASE_URL}
     depends_on:
       - redis
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/search?q=test&format=json"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   cloudflared:
     image: cloudflare/cloudflared:2026.3.0
