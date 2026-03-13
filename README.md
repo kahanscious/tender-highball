@@ -58,7 +58,7 @@ For a first test, run Tender Highball on a MacBook, Linux machine, or WSL distro
 
 Prerequisites:
 
-- Docker Desktop or Docker Engine with the Compose plugin
+- Docker Desktop or Docker Engine running, with either the Compose plugin (`docker compose`) or legacy binary (`docker-compose`)
 - `bash`, `make`, `openssl`, `curl`, `git`
 - `envsubst` from GNU `gettext`
 
@@ -89,6 +89,8 @@ make health
 curl "http://localhost:8080/search?q=hello&format=json&language=en"
 ```
 
+If your machine has the legacy Compose binary instead of the plugin, replace `docker compose` with `docker-compose` in the commands above.
+
 You are up when `make health` passes and the `curl` response contains a `results` array.
 
 Stop the local stack:
@@ -97,11 +99,13 @@ Stop the local stack:
 docker compose down
 ```
 
+If needed, use `docker-compose down` on older Docker installs.
+
 ### Raspberry Pi deployment
 
 On a Pi 5 or other always-on Linux host:
 
-1. Install Docker Engine, the Docker Compose plugin, `make`, `openssl`, `curl`, `git`, and `gettext`/`envsubst`.
+1. Install Docker Engine plus either the Docker Compose plugin or `docker-compose`, along with `make`, `openssl`, `curl`, `git`, and `gettext`/`envsubst`.
 2. Clone this repo onto the machine.
 3. Run `make setup`.
 4. Provide your public base URL, Cloudflare Tunnel token, and the `User-Agent` string your app will send.
@@ -128,4 +132,4 @@ Tender Highball was first built to plug into [Caboose](https://trycaboose.dev) (
 - **No API costs** — runs on a Raspberry Pi 4 or any cheap VPS
 - **Privacy** — your queries don't leave your infrastructure
 - **No rate limits** — you control the ceiling
-- **Portable** — `docker compose up` on any Linux box
+- **Portable** — runs with `docker compose` or `docker-compose` on any Linux box

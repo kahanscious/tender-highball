@@ -1,19 +1,25 @@
 .PHONY: setup up down logs health restart
 
+COMPOSE := $(shell if docker compose version >/dev/null 2>&1; then echo "docker compose"; elif command -v docker-compose >/dev/null 2>&1; then echo "docker-compose"; fi)
+
+ifndef COMPOSE
+$(error Docker Compose is required. Install the `docker compose` plugin or the `docker-compose` binary.)
+endif
+
 setup:
 	@bash setup.sh
 
 up:
-	docker compose up -d
+	$(COMPOSE) up -d
 
 down:
-	docker compose down
+	$(COMPOSE) down
 
 logs:
-	docker compose logs -f searxng
+	$(COMPOSE) logs -f searxng
 
 restart:
-	docker compose down && docker compose up -d
+	$(COMPOSE) down && $(COMPOSE) up -d
 
 health:
 	@echo "Checking SearXNG health..."

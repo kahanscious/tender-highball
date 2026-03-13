@@ -7,11 +7,34 @@ info()    { echo -e "${GREEN}[tender-highball]${NC} $*"; }
 warn()    { echo -e "${YELLOW}[tender-highball]${NC} $*"; }
 error()   { echo -e "${RED}[tender-highball]${NC} $*" >&2; }
 
+detect_compose() {
+  if docker compose version >/dev/null 2>&1; then
+    echo "docker compose"
+    return 0
+  fi
+
+  if command -v docker-compose >/dev/null 2>&1; then
+    echo "docker-compose"
+    return 0
+  fi
+
+  return 1
+}
+
+run_compose() {
+  if docker compose version >/dev/null 2>&1; then
+    docker compose "$@"
+    return
+  fi
+
+  docker-compose "$@"
+}
+
 # ── 1. prerequisite check ────────────────────────────────────────────────────
 info "Checking prerequisites..."
 MISSING=()
 command -v docker       >/dev/null 2>&1 || MISSING+=("docker")
-docker compose version  >/dev/null 2>&1 || MISSING+=("docker compose (plugin)")
+COMPOSE_CMD=$(detect_compose) || MISSING+=("docker compose (plugin) or docker-compose")
 command -v make         >/dev/null 2>&1 || MISSING+=("make")
 command -v openssl      >/dev/null 2>&1 || MISSING+=("openssl")
 command -v envsubst     >/dev/null 2>&1 || MISSING+=("envsubst (gettext)")
@@ -26,6 +49,7 @@ if [ ${#MISSING[@]} -gt 0 ]; then
   exit 1
 fi
 info "All prerequisites found."
+info "Using Compose command: ${COMPOSE_CMD}"
 
 # ── 2. collect inputs ────────────────────────────────────────────────────────
 echo ""
@@ -65,7 +89,7 @@ info "searxng/settings.yml generated."
 
 # ── 6. start the stack ───────────────────────────────────────────────────────
 info "Starting containers..."
-docker compose up -d
+run_compose up -d
 
 # ── 7. readiness probe (poll root until HTTP 200, max 30s) ───────────────────
 info "Waiting for SearXNG to be ready..."
