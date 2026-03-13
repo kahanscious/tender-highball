@@ -50,6 +50,73 @@ A clean, stable JSON contract your application can call without an API key or th
 
 ---
 
+## Getting started
+
+For a first test, run Tender Highball on a MacBook, Linux machine, or WSL distro with Docker access. For a real always-on deployment, use a Raspberry Pi, mini PC, or VPS.
+
+### Local smoke test
+
+Prerequisites:
+
+- Docker Desktop or Docker Engine with the Compose plugin
+- `bash`, `make`, `openssl`, `curl`, `git`
+- `envsubst` from GNU `gettext`
+
+Create a local `.env` and generate `searxng/settings.yml`:
+
+```bash
+cat > .env <<EOF
+SEARXNG_BASE_URL=http://localhost:8080
+SEARXNG_SECRET_KEY=$(openssl rand -hex 32)
+CLOUDFLARE_TUNNEL_TOKEN=local-placeholder
+APP_USER_AGENT="Caboose/1.0 (SearchService)"
+EOF
+
+export SEARXNG_BASE_URL=http://localhost:8080
+export SEARXNG_SECRET_KEY="$(grep '^SEARXNG_SECRET_KEY=' .env | cut -d= -f2-)"
+
+envsubst '$SEARXNG_SECRET_KEY $SEARXNG_BASE_URL' \
+  < searxng/settings.yml.template \
+  > searxng/settings.yml
+```
+
+Start only Redis and SearXNG for the local test:
+
+```bash
+docker compose up -d redis searxng
+docker compose ps
+make health
+curl "http://localhost:8080/search?q=hello&format=json&language=en"
+```
+
+You are up when `make health` passes and the `curl` response contains a `results` array.
+
+Stop the local stack:
+
+```bash
+docker compose down
+```
+
+### Raspberry Pi deployment
+
+On a Pi 5 or other always-on Linux host:
+
+1. Install Docker Engine, the Docker Compose plugin, `make`, `openssl`, `curl`, `git`, and `gettext`/`envsubst`.
+2. Clone this repo onto the machine.
+3. Run `make setup`.
+4. Provide your public base URL, Cloudflare Tunnel token, and the `User-Agent` string your app will send.
+5. Run `make health` after setup completes.
+6. Verify the endpoint from another machine with `https://your-domain/search?q=test&format=json&language=en`.
+
+### Cloudflare setup
+
+1. Create a Cloudflare Tunnel and add a public hostname such as `search.trycaboose.dev`.
+2. Point that hostname at `http://searxng:8080`.
+3. Set a WAF rule that blocks requests whose `User-Agent` does not contain your chosen app identifier.
+4. Make sure your client sends that same `User-Agent` on every request.
+
+---
+
 ## Origin
 
 Tender Highball was first built to plug into [Caboose](https://trycaboose.dev) ([source](https://github.com/kahanscious/caboose)), a local-first AI coding assistant. The project is intentionally standalone so other AI agents, coding assistants, and search-enabled applications can adapt it without depending on Caboose.
