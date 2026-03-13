@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+searxng/settings.yml
 
 # Project config (local)
 .caboose/
@@ -9,7 +10,6 @@
 .worktrees/
 
 # Internal docs & plans
-CLAUDE.md
 AGENTS.md
 CABOOSE.md
 SPEC.md

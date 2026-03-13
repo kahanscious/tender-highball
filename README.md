@@ -2,9 +2,9 @@
 
 > **Under construction.** This project is not yet deployed.
 
-A self-hosted search relay that transforms SearXNG results into clean JSON for AI agents — the fuel that keeps the train running.
+A self-hosted search relay built on SearXNG, exposed through Cloudflare Tunnel, and ready to serve JSON search results to AI agents and other applications.
 
-Built to power [Caboose](https://trycaboose.dev), but designed for anyone who wants a free, private alternative to Tavily, Exa or Brave Search.
+Originally designed as a search add-on for [Caboose](https://trycaboose.dev), but applicable to any app that needs a private, self-hosted web search backend.
 
 ---
 
@@ -15,7 +15,7 @@ In railroad terms:
 - **The Tender** is the car behind the locomotive that carries the fuel. This service carries the information that powers your LLM or AI agent.
 - **The Highball** was the signal that meant *clear track ahead — proceed at full speed*. This service gives your agent the green light to move forward with real, factual data instead of guessing.
 
-Technically: a self-hosted [SearXNG](https://github.com/searxng/searxng) instance exposed via Cloudflare Tunnel, returning clean JSON for AI agent consumption. No API key required on the consumer side.
+Technically: a self-hosted [SearXNG](https://github.com/searxng/searxng) instance exposed via Cloudflare Tunnel, returning SearXNG's native JSON search responses over a stable endpoint. No API key required on the consumer side.
 
 ---
 
@@ -46,13 +46,13 @@ GET https://{your-domain}/search?q={query}&format=json&language=en
 }
 ```
 
-A clean, stable JSON contract your agent can call without an API key or third-party account. Use it as a free alternative to Tavily or Brave Search, or as a fallback alongside them.
+A clean, stable JSON contract your application can call without an API key or third-party account. Use it as a free alternative to Tavily or Brave Search, or as a fallback alongside them.
 
 ---
 
 ## Origin
 
-Tender Highball was built as the search backend for [Caboose](https://trycaboose.dev) ([source](https://github.com/kahanscious/caboose)), a local-first AI coding assistant. Rather than lock it to that project, it's designed as a standalone relay any AI agent or LLM application can use.
+Tender Highball was first built to plug into [Caboose](https://trycaboose.dev) ([source](https://github.com/kahanscious/caboose)), a local-first AI coding assistant. The project is intentionally standalone so other AI agents, coding assistants, and search-enabled applications can adapt it without depending on Caboose.
 
 ---
 
