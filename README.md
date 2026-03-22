@@ -121,7 +121,7 @@ On a Pi 5 or other always-on Linux host:
 
 ## Using with Caboose
 
-Caboose has built-in web search support. For quick local use, Caboose's `/search-setup` command spins up its own SearXNG instance with zero configuration. Tender Highball is for when you want an always-on deployment that persists across reboots, runs on a separate machine, or is accessible remotely.
+[Caboose](https://trycaboose.dev) ([source](https://github.com/kahanscious/caboose)) has built-in web search support. For quick local use, Caboose's `/search-setup` command spins up its own SearXNG instance with zero configuration. Tender Highball is for when you want an always-on deployment that persists across reboots, runs on a separate machine, or is accessible remotely.
 
 ### Setup
 
