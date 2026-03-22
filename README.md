@@ -1,10 +1,8 @@
 # Tender Highball
 
-> **Under construction.** This project is not yet deployed.
-
 A self-hosted search relay built on SearXNG, exposed through Cloudflare Tunnel, and ready to serve JSON search results to AI agents and other applications.
 
-Originally designed as a search add-on for [Caboose](https://trycaboose.dev), but applicable to any app that needs a private, self-hosted web search backend.
+Originally designed as the always-on search backend for [Caboose](https://trycaboose.dev), but applicable to any app that needs a private, self-hosted web search backend.
 
 ---
 
@@ -121,9 +119,51 @@ On a Pi 5 or other always-on Linux host:
 
 ---
 
+## Using with Caboose
+
+Caboose has built-in web search support. For quick local use, Caboose's `/search-setup` command spins up its own SearXNG instance with zero configuration. Tender Highball is for when you want an always-on deployment that persists across reboots, runs on a separate machine, or is accessible remotely.
+
+### Setup
+
+1. Deploy Tender Highball on your server (see [Getting started](#getting-started) above)
+2. Verify it's working: `curl "https://your-domain/search?q=test&format=json"`
+3. Add this to your Caboose config (`~/.config/caboose/config.toml` on Linux, `~/Library/Application Support/caboose/config.toml` on macOS):
+
+```toml
+[services.web_search]
+provider = "searxng"
+base_url = "https://your-domain"
+```
+
+4. Restart Caboose. The agent will now use your Tender Highball instance for all web searches.
+
+### Local network
+
+If Tender Highball runs on your local network without Cloudflare Tunnel, use the local IP:
+
+```toml
+[services.web_search]
+provider = "searxng"
+base_url = "http://192.168.1.100:8080"
+```
+
+### When to use which
+
+| | `/search-setup` | Tender Highball |
+|---|---|---|
+| Setup | One command | Clone + deploy |
+| Persistence | Stops with Docker | Always-on |
+| Access | localhost only | Local network or internet |
+| Cloudflare Tunnel | No | Yes |
+| Redis caching | No | Yes |
+| WAF protection | No | Yes |
+| Best for | Development | Production / shared use |
+
+---
+
 ## Origin
 
-Tender Highball was first built to plug into [Caboose](https://trycaboose.dev) ([source](https://github.com/kahanscious/caboose)), a local-first AI coding assistant. The project is intentionally standalone so other AI agents, coding assistants, and search-enabled applications can adapt it without depending on Caboose.
+Tender Highball was originally built as the search backend for [Caboose](https://trycaboose.dev) ([source](https://github.com/kahanscious/caboose)), a terminal-native AI coding agent. The project is intentionally standalone so other AI agents, coding assistants, and search-enabled applications can use it without depending on Caboose.
 
 ---
 
